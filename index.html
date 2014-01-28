@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<head>
+	<title>Count Lines</title>
+	<style type="text/css">
+	<!--
+	body { font-family: Arial; }
+	.written-message-input-wrapper { position: relative; padding: 8px 70px 8px 8px; width: auto; font-size: 14px; border-radius: 3px; border: 1px solid #ccc; background-color: #efefef;  }
+		.written-message-input-wrapper textarea { position: relative; width: 100%; border: 0 none; background-color: transparent; }
+		.written-message-input-wrapper span { position: absolute; right: 5px; top: 4px; }
+	
+	.written-message-preview { margin: 1.5em 0; width: 300px; }
+	.written-message-preview section { text-align: center; overflow: hidden; }
+		.written-message-preview section .box { border: 1px solid #999; display: table-cell; vertical-align: middle; color: #111; overflow: hidden; width: 200px; height: 280px; }
+			.written-message-preview section .box span { display: inline-block; padding: 10px; }
+				.written-message-preview section .box span div { word-wrap: break-word; }
+				.written-message-preview section .box span div.hidden { opacity: 0;  filter: aplha(opacity=0); }
+	-->
+	</style>
+</head>
+
+<body ng-app="TheApp" ng-controller="TheCtrl">
+	
+	<div class="written-message-input-wrapper">
+		<textarea class="msd-elastic" maxlength="110" ng-model="giftMessageText" rows="3"></textarea>
+		<span id="written-message-count">{{numUsedCharacters}}/110</span>
+	</div>
+	
+	<div class="written-message-preview">
+		<section class="back">
+			<div class="box"><span class="message-preview" message-preview="{{ giftMessageText }}"></span></div>
+		</section>
+	</div>
+
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
+	<script src="js/angular-sanitize.min.js"></script>
+	<script src="js/elastic.js"></script>
+	<script type="text/javascript">
+	<!--//
+
+	var app = angular.module('TheApp',['ngSanitize','monospaced.elastic']);
+
+	app.controller('TheCtrl', ['$scope', function ($scope) {
+
+		$scope.giftMessageText = '';
+		$scope.numUsedCharacters = 0;
+		$scope.$watch('giftMessageText', function (val) {
+			if (val) val = val.replace(/\n/g, '');
+			$scope.numUsedCharacters = val.length;
+		});
+
+	}]);
+
+	app.directive('messagePreview', function () {
+		return {
+			template: '<div ng-repeat="part in parts" ng-bind-html="part.text"></div>'
+			,link: function (scope, el, attrs) {
+				scope.parts = [];
+				attrs.$observe('messagePreview', function (val) {
+					scope.parts = [];
+					var words = val.split(' ');
+					var partsa = val.split('\n');
+					for (i=0; i<Math.min(partsa.length,5); i++) {
+						if (partsa[i].length == 0) partsa[i] = '&nbsp;';
+						scope.parts.push({ text: partsa[i] });
+					}
+				});
+			}
+		}
+	});
+
+	//-->
+	</script>
+</body>
+</html>
