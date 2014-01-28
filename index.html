@@ -20,6 +20,14 @@
 
 <body ng-app="TheApp" ng-controller="TheCtrl">
 	
+	<h4>Type a message in the textarea below to see it previewed in real time.</h4>
+	<p>The problem: Figure out how to make the preview (the bottom box) cap out at 5 lines.</p>
+	<ul>
+		<li>blank lines count as a line</li>
+		<li>max 22 characters per line</li>
+		<li>must not let a user type a word over 22 characters long - have to force a line break to prevent the bounding box from expanding</li>
+	</ul>
+
 	<div class="written-message-input-wrapper">
 		<textarea class="msd-elastic" maxlength="110" ng-model="giftMessageText" rows="3"></textarea>
 		<span id="written-message-count">{{numUsedCharacters}}/110</span>
